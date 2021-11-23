@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Ville } from './classes/ville';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,6 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'medical';
+
+  ville=new Ville(1,"Paris",12345,"France");
 }

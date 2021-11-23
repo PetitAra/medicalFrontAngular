@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="fr">
+<head class="mb-5" th:include="~{ fragments/head::#head }"></head>
+<body>
+<header class="mb-5" th:include="~{ fragments/header::#header }"></header>
+<main class="container">
+
+    <h1> Liste des villes</h1>
+    <a href="/ville/add" class="btn btn-primary">Ajouter une ville</a>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Code postale</th>
+            <th>Pays</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let ville of villes">
+            <td>{{ville.id}}</td>
+            <td >{{ville.nom}}</td>
+            <td >{{ville.codePostal}}</td>
+            <td >{{ville.pays}}</td>
+            <td>
+                <a class="btn btn-secondary btn-sm" th:href="@{'/ville/edit/' + ${ville.id}}"><i
+                        class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                <button class="btn btn-danger btn-sm" th:onclick="|supprimer('ville', ${ville.id})|"><i
+                        class="fa fa-trash-o" aria-hidden="true"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</main>
+
+<footer th:include="~{ fragments/footer::#footer }"></footer>
+
+</body>
+</html>

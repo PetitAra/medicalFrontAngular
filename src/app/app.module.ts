@@ -7,13 +7,15 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { VilleComponent } from './ville/ville.component';
 import { HttpClientModule} from '@angular/common/http';
+import { PatientComponent } from './patient/patient.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    VilleComponent
+    VilleComponent,
+    PatientComponent
   ],
   imports: [
     BrowserModule,

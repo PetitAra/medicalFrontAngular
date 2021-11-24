@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html  lang="fr">
+<head class="mb-5" ></head>
+<body>
+<header class="mb-5" ></header>
+<main class="container">
+
+<h1> Liste des patients</h1>
+<a href="/patient/add" class="btn btn-primary">Ajouter un patient</a>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Nom & prénom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Adresse</th>
+        <th>Ville / Pays</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let patient of patients">
+        <td>{{patient.id}}</td>
+        <td>{{patient.nom}} {{patient.prenom}}</td>
+        <td >{{patient.email}}</td>
+        <td >{{patient.telephone}}</td>
+        <td >{{ patient.adresse }}</td>
+        <td>{{patient.ville.nom}} {{patient.ville.pays}}</td>
+        <td>
+            <a class="btn btn-secondary btn-sm" th:href="@{'/patient/edit/' + ${patient.id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+            <button class="btn btn-danger btn-sm" th:onclick="|supprimer( 'patient' ,${patient.id})|"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+</main>
+
+<footer th:include="~{ fragments/footer::#footer }"></footer>
+</body>
+</html>

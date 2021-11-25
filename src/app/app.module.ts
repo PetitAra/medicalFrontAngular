@@ -8,6 +8,7 @@ import { FooterComponent } from './footer/footer.component';
 import { VilleComponent } from './ville/ville.component';
 import { HttpClientModule} from '@angular/common/http';
 import { PatientComponent } from './patient/patient.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,12 +16,14 @@ import { PatientComponent } from './patient/patient.component';
     HeaderComponent,
     FooterComponent,
     VilleComponent,
-    PatientComponent
+    PatientComponent,
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

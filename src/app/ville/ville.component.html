@@ -5,9 +5,32 @@
 <header class="mb-5"></header>
 <main class="container">
 
-    <h1> Liste des villes</h1>
-    <a href="/ville/add" class="btn btn-primary">Ajouter une ville</a>
+    
 
+    <h1> Liste des villes</h1>
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="resetCity()"> Ajouter une ville  </button>
+    
+    <button class="btn btn-primary ms-3" (click)="reloadCities()">Actualiser </button>
+    <button class="btn btn-primary ms-3 btn-danger" (click)="cleanCities()">Vider </button>
+
+    <form method="get" (submit)="reloadCities()">
+        <div class="row my-4">
+            <div class="col-4">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="search" placeholder="Rechercher" [(ngModel)]="search"
+                           aria-describedby="button-addon2">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i class="fa fa-search"
+                                                                                                  aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-4">
+                <button type="submit" class="btn btn-sm btn-primary">Rechercher</button>
+            </div>
+        </div>
+    </form>
+    
     <table class="table table-striped">
         <thead>
         <tr>
@@ -25,16 +48,51 @@
             <td >{{ville.codePostal}}</td>
             <td >{{ville.pays}}</td>
             <td>
-                <a class="btn btn-secondary btn-sm" th:href="@{'/ville/edit/' + ${ville.id}}"><i
-                        class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                <button class="btn btn-danger btn-sm" th:onclick="|supprimer('ville', ${ville.id})|"><i
-                        class="fa fa-trash-o" aria-hidden="true"></i></button>
+                <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="edit(ville.id)" class="btn btn-secondary btn-sm" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                <button class="btn btn-danger btn-sm ms-3" (click)="delete(ville.id)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
             </td>
         </tr>
         </tbody>
     </table>
 
 </main>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" #closebutton data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form ngNativeValidate (submit)="submitCity()">
+        <div class="modal-body">
+            
+                <div class="form-line mb-4">
+                    <label class="form-label">Ville *</label>
+                    <input class="form-control" type="text" name="nom" placeholder="Ville" [(ngModel)]="ville.nom" required >
+                </div>
+                <div class="form-line mb-4">
+                    <label>Code postale *</label>
+                    <input class="form-control" type="text" name="code_postale" placeholder="Code postale" [(ngModel)]="ville.codePostal" required >
+                </div>
+        
+                <div class="form-line mb-4">
+                    <label class="form-label">Pays *</label>
+                    <input class="form-control" type="text" name="pays" placeholder="Pays" [(ngModel)]="ville.pays" required >
+                </div>
+    
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          <button type="button" type="submit" class="btn btn-primary" >Valider</button>
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
 
 <footer th:include="~{ fragments/footer::#footer }"></footer>
 

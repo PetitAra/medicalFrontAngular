@@ -11,10 +11,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PatientService {
 
-  constructor(private http :HttpClient) {
-
-
-   }
+  constructor(private http :HttpClient) { }
 
    getAll(s ?: string):Observable<Patient[]>{
     return this.http.get<Patient[]>(environment.backendUri+"patient" + (s == undefined ? "" : "?search=" + s), httpOptions)

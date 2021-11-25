@@ -70,6 +70,7 @@
         <form ngNativeValidate (submit)="submitCity()">
         <div class="modal-body">
             
+            <div class="alert alert-danger" *ngIf="errorMessage.length > 0">{{errorMessage}}</div>
                 <div class="form-line mb-4">
                     <label class="form-label">Ville *</label>
                     <input class="form-control" type="text" name="nom" placeholder="Ville" [(ngModel)]="ville.nom" required >

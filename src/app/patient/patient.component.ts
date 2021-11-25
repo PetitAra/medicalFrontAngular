@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Patient } from '../classes/patient';
 import { Ville } from '../classes/ville';
@@ -18,7 +19,8 @@ export class PatientComponent implements OnInit {
     patients: Array<Patient> = [];
    patient: Patient = new Patient()
    villes: Array<Ville> =[];
-   search: string=""
+   search: string="";
+   errorMessage: string=""
 
    @ViewChild("closebutton") closebuttonelement: any;
   
@@ -26,7 +28,10 @@ export class PatientComponent implements OnInit {
 
   ngOnInit(): void {
     this.reloadPatients();
-    this.getVille();
+    this.vs.getAll().subscribe({
+      next: (data) => { this.villes = data },
+      error: (err) => { console.log(err.error.message) }
+    });
   }
 
 reloadPatients(): void {
@@ -57,30 +62,41 @@ reloadPatients(): void {
      )
  }
 
- submitPatient(){
-   if (this.patient.id == undefined){
-   this.ps.add(this.patient).subscribe(
-     data => { 
-       this.closebuttonelement.nativeElement.click();
-       this.reloadPatients()})
-   }else{
-     this.ps.update(this.patient).subscribe(
-     data => { 
-       this.closebuttonelement.nativeElement.click();
-       this.reloadPatients()})
+ submitPatient(): void {
+  let obs: Observable<any>;
+  if (this.patient.id == undefined) { // Ajout
+    obs = this.ps.add(this.patient);
+  } else { // Edition
+    obs = this.ps.update(this.patient);
+  }
 
-   }
- }
-
- resetPatient(){
- this.patient= new Patient();
- }
-
- getVille(): void {
-  this.villes = []; 
-  this.vs.getAll().subscribe(
-    data => { this.villes = data }
+  obs.subscribe(
+    {
+      next: () => {
+        this.reloadPatients();
+        this.closebuttonelement.nativeElement.click();
+      },
+      error: (err) => {
+        this.errorMessage = err.error.message;
+      }
+    }
   );
 }
+
+checkVille(v1: Ville, v2: Ville): boolean {
+  return v1 != undefined && v2 != undefined && v1.id == v2.id;
+}
+
+ resetPatient(): void {
+  this.errorMessage = "";
+  this.patient = new Patient();
+ }
+
+ //getVille(): void {
+  //this.villes = []; 
+  //this.vs.getAll().subscribe(
+  //  data => { this.villes = data }
+  //);
+ //}
 
 }

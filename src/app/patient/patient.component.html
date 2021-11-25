@@ -71,7 +71,8 @@
 
         <form ngNativeValidate (submit)="submitPatient()">
         <div class="modal-body">
-            
+        
+            <div class="alert alert-danger" *ngIf="errorMessage.length > 0">{{errorMessage}}</div>
                 <div class="form-line mb-4">
                     <label class="form-label">Nom *</label>
                     <input class="form-control" type="text" name="nom" placeholder="Votre nom" [(ngModel)]="patient.nom" required >

@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Ville } from '../classes/ville';
 import { VilleService } from '../services/ville.service';
@@ -15,6 +16,7 @@ export class VilleComponent implements OnInit {
   villes: Array<Ville> = [];
   ville: Ville =new Ville()
   search : string=""
+  errorMessage: string=""
 
   @ViewChild("closebutton") closebuttonelement: any;
  
@@ -57,21 +59,28 @@ export class VilleComponent implements OnInit {
     }
 
     submitCity(){
-      if (this.ville.id == undefined){
-      this.vs.add(this.ville).subscribe(
-        data => { 
-          this.closebuttonelement.nativeElement.click();
-          this.reloadCities()})
-      }else{
-        this.vs.update(this.ville).subscribe(
-        data => { 
-          this.closebuttonelement.nativeElement.click();
-          this.reloadCities()})
+      let obs: Observable<any>;
+  if (this.ville.id == undefined) { // Ajout
+    obs = this.vs.add(this.ville);
+  } else { // Edition
+    obs = this.vs.update(this.ville);
+  }
 
+  obs.subscribe(
+    {
+      next: () => {
+        this.reloadCities();
+        this.closebuttonelement.nativeElement.click();
+      },
+      error: (err) => {
+        this.errorMessage = err.error.message;
       }
     }
+  );
+}
 
     resetCity(){
+    this.errorMessage = "";
     this.ville= new Ville();
     }
   

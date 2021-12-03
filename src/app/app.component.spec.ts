@@ -23,13 +23,15 @@ describe('AppComponent', () => {
   it(`should have as title 'medical'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('medical');
+    expect(app.title).toEqual('medical'); // <=> Assertion 
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('medical app is running!');
+    const compiled = fixture.nativeElement as HTMLElement; 
+    //expect(compiled.querySelector('.content span')?.textContent).toContain('medical app is running!');
+    // je cherche un span sous un élément html ayant la classe content -> je récupère son contenu
+    // puis je compare avec "medical app is running!"
   });
 });

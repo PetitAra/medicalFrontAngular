@@ -6,28 +6,42 @@ import { Patient } from '../classes/patient';
 import { Ville } from '../classes/ville';
 import { PatientService } from '../services/patient.service';
 import { VilleService } from '../services/ville.service';
-import { httpOptions } from '../variables';
+import { AppComponent } from '../app.component';
+import { RdvService } from '../services/rdv.service';
+import { ConfigService } from '../services/config.service';
 
 @Component({
   selector: 'app-patient',
   templateUrl: './patient.component.html',
-  styleUrls: ['./patient.component.css']
+  styleUrls: ['./patient.component.css'],
+  providers: [ConfigService]
 })
 
 export class PatientComponent implements OnInit {
 
+
+  
     patients: Array<Patient> = [];
    patient: Patient = new Patient()
    villes: Array<Ville> =[];
    search: string="";
    errorMessage: string=""
+   success: boolean = false
+   patientRdv : Array<any> = [];
+
 
    @ViewChild("closebutton") closebuttonelement: any;
   
-  constructor(private ps : PatientService, private vs: VilleService) { }
+   constructor(private vs: VilleService, public ps: PatientService , private rdvs: RdvService
+    , public config: ConfigService) {}
+
+
+  getPatientRdv(): void {
+    this.patientRdv = [];  }
 
   ngOnInit(): void {
     this.reloadPatients();
+    this.getPatientRdv()
     this.vs.getAll().subscribe({
       next: (data) => { this.villes = data },
       error: (err) => { console.log(err.error.message) }
@@ -38,7 +52,22 @@ reloadPatients(): void {
   console.log("search ==" + this.search)
   this.patients=[];
  this.ps.getAll(this.search).subscribe(
-   data => { this.patients = data },
+  data => { 
+    this.patients = data 
+
+    // je boucle sur les patients pour faire une req http et récupérer les rdv de chaq patient
+    data.forEach( patient => {
+      this.rdvs.getAll(undefined , patient.id ).subscribe(
+        drdv => { 
+          if( patient.id != undefined )
+            this.patientRdv[ patient.id  ] = drdv 
+          }
+      )
+
+    }  )
+
+    console.log( this.patientRdv )
+  }
    //err => console.log("Une erreur est survenue")
  )
 }
@@ -75,6 +104,10 @@ reloadPatients(): void {
       next: () => {
         this.reloadPatients();
         this.closebuttonelement.nativeElement.click();
+        this.success = true;
+        setTimeout(() => {                           // <<<---using ()=> syntax
+          this.success = false;
+        }, 5000);
       },
       error: (err) => {
         this.errorMessage = err.error.message;

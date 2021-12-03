@@ -5,16 +5,17 @@
 <header class="mb-5" ></header>
 <main class="container">
 
+    <div class="alert alert-success" *ngIf="success">Opération effectuée avec succès</div>
 <h1> Liste des patients</h1>
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="resetPatient()"> Ajouter un patient  </button>
+<button id="addbtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="resetPatient()"> Ajouter un patient  </button>
     
     <button class="btn btn-primary ms-3" (click)="reloadPatients()">Actualiser </button>
     <button class="btn btn-primary ms-3 btn-danger" (click)="cleanPatients()">Vider </button>
 
 
     
-<form method="get" (submit)="reloadPatients()">
+<form method="get" (submit)="reloadPatients()" id="searchForm">
     <div class="row my-4">
         <div class="col-4">
             <div class="input-group mb-3">
@@ -28,7 +29,9 @@
     </div>
 </form>
 
-<table class="table table-striped">
+    <div class="alert alert-info" id="no-items-message"  *ngIf="patients.length == 0">Aucun patient trouvé</div>
+
+    <table class="table table-striped" id="patientstable">
     <thead>
     <tr>
         <th>Id</th>
@@ -59,6 +62,40 @@
 
 </main>
 
+<ng-template #patientcard let-patient="item" let-rdvs="rdvsitem">
+
+    <div class="card" *ngIf="rdvs[patient.id]">
+        <div class="card-body">
+            <h5 class="card-title">{{patient.prenom}} {{patient.nom}}</h5>
+            <hr>
+            <div class="card-text mt-3">
+                <h2 class="h6 bg-dark text-white p-2">Infos du patient</h2>
+                <p>
+                    <b>Email </b> : <a href="mailto:{{patient.email}}">{{patient.email}}</a><br>
+                    <b>Tél </b> : <a href="tel:{{patient.telephone}}">{{patient.telephone}}</a><br>
+                </p>
+
+                <h2 class="h6 bg-dark text-white p-2">Liste des RDVS</h2>
+                <ul>
+                    <li *ngFor="let rdv of rdvs[patient.id]">{{ rdv.dateheure| date:'dd/MM/yyyy HH:mm' }}</li><br>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+</ng-template>
+
+<div class="container">
+    <div class="row">
+        <div *ngFor="let patient of patients" class="col-3 my-4">
+            <ng-container *ngTemplateOutlet="patientcard;context:{item:patient , rdvsitem : patientRdv}"></ng-container>
+        </div>
+    </div>
+</div>
+
+
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -75,7 +112,7 @@
             <div class="alert alert-danger" *ngIf="errorMessage.length > 0">{{errorMessage}}</div>
                 <div class="form-line mb-4">
                     <label class="form-label">Nom *</label>
-                    <input class="form-control" type="text" name="nom" placeholder="Votre nom" [(ngModel)]="patient.nom" required >
+                    <input class="form-control" id="prenomModal" type="text" name="nom" placeholder="Votre nom" [(ngModel)]="patient.nom" required >
                 </div>
                 <div class="form-line mb-4">
                     <label>Prenom *</label>

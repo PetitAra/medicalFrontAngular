@@ -1,4 +1,4 @@
-<header class="mb-5"  id="header">
+<header class="mb-5"  id="header" *ngIf="guard.isConnected()">
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
@@ -12,25 +12,25 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="/patient">Patient</a></li>
-          <li class="nav-item"><a class="nav-link" href="/rdv">RDV</a></li>
-          <li class="nav-item"><a class="nav-link" href="/ville" >Ville</a></li>
+          <li class="nav-item"><a class="nav-link" [routerLink]="['patient']">Patient</a></li>
+          <li class="nav-item"><a class="nav-link" [routerLink]="['rdv']">RDV</a></li>
+          <li class="nav-item"><a class="nav-link" [routerLink]="['ville']">Ville</a>
           <li class="nav-item"><a class="nav-link" href="/user" sec:authorize="hasRole('ROLE_ADMIN')">Utilisateurs</a></li>
         </ul>
       </div>
     </div>
 
-    <div id="user-welcome">
-      Bienvenue 
+    <div id="user-welcome" >
+      Bienvenue {{ guard.getUserFullname() }}
     </div>
 
     <div class="dropdown dropstart">
       <button class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-        <img src="/assets/img/profil.jpg" class="rounded-circle">
+        <img src="http://localhost:8080/images/uploads/{{ guard.getUser().photouser }}" class="rounded-circle img-circle">
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Profil</a></li>
-        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+        <li><a class="dropdown-item" (click)="doact()" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Profil</a></li>
+        <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
       </ul>
     </div>
 

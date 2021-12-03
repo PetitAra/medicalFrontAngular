@@ -1,0 +1,25 @@
+<form [formGroup]="personneForm" class="container">
+    <div>
+        Identifiant :
+        <input type="number" formControlName="id">
+        <div class="alert alert-danger" *ngIf="personneForm.controls['id'].errors">
+            Id obligatoire !
+        </div>
+    </div>
+    <div>
+        Nom :
+        <input type="text" formControlName="nom">
+        <div class="alert alert-danger" *ngIf="personneForm.controls['nom'].errors">
+            nom obligatoire !
+        </div>
+    </div>
+    <div>
+        Prénom :
+        <input type="text" formControlName="prenom">
+        <div class="alert alert-danger" *ngIf="personneForm.controls['prenom'].errors">
+            prenom obligatoire !
+        </div>
+    </div>
+
+    <button (click)="afficherNom()">Go</button>
+</form> 

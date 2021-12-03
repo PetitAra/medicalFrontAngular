@@ -1,0 +1,109 @@
+<main class="container">
+
+    <div class="alert alert-success" *ngIf="success">Opération effectuée avec succès</div>
+
+    <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary" (click)="resetCity()">Ajouter une ville</button>
+
+    <button class="btn btn-primary ms-3" (click)="reloadCities()">Actualiser</button>
+
+    <button class="btn btn-danger ms-3" (click)="clearCities()">Vider</button>
+
+    <h1 class="my-4">Liste des villes</h1>
+
+    <form method="get" [formGroup]="searchForm" (submit)="reloadCities()">
+        <div class="row my-4">
+            <div class="col-4">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="search" placeholder="Rechercher" 
+                    formControlName="item" aria-describedby="button-addon2">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+            </div>
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+            </div>
+        </div>
+    </form>
+
+
+    <ng-container *ngIf="VilleState$ | async as state" [ngSwitch]="state.dataState">
+        <ng-container *ngSwitchCase="VilleStateEnum.INITIAL">
+            <div class="p-2"> Initial State</div>
+        </ng-container>
+        <ng-container *ngSwitchCase="VilleStateEnum.LOADING">
+            <div class="p-2"> Loading...</div>
+        </ng-container>
+        <ng-container *ngSwitchCase="VilleStateEnum.ERROR">
+            <div class="p-2 text-danger"> {{state.errorMessage |json}}</div>
+        </ng-container>
+        <ng-container *ngSwitchCase="VilleStateEnum.LOADED" class="p-4">
+
+            <table class="table table-striped" *ngIf="state.villes.length > 0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Code Postal</th>
+                        <th>Pays</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let ville of state.villes">
+                        <td>{{ ville.id }}</td>
+                        <td>{{ ville.nom }}</td>
+                        <td>{{ ville.codePostal }}</td>
+                        <td>{{ ville.pays }}</td>
+                        <td>
+                            <a [routerLink]="['addedit' , ville.id ]" class="btn btn-secondary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                            <button class="btn btn-danger btn-sm ms-3" (click)="delete( ville.id )">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </ng-container>
+    </ng-container>
+
+
+
+</main>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" *ngIf="ville.id == undefined">Ajouter une ville</h5>
+                <h5 class="modal-title" id="exampleModalLabel" *ngIf="ville.id != undefined">Editer une ville</h5>
+                <button type="button" #closebutton class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form ngNativeValidate (submit)="submitCity()">
+                <div class="modal-body">
+
+                    <div class="alert alert-danger" *ngIf="errorMessage.length > 0">{{errorMessage}}</div>
+
+                    <div class="form-line mb-4">
+                        <label class="form-label">Nom *</label>
+                        <input class="form-control" minlength="2" type="text" name="nom" placeholder="Nom de la ville" [(ngModel)]="ville.nom" required>
+                    </div>
+                    <div class="form-line mb-4">
+                        <label>Code postal *</label>
+                        <input class="form-control" type="text" name="codePostal" placeholder="Code Postal" [(ngModel)]="ville.codePostal" required>
+                    </div>
+
+                    <div class="form-line mb-4">
+                        <label class="form-label">Pays *</label>
+                        <input class="form-control" type="text" name="pays" placeholder="Pays" [(ngModel)]="ville.pays" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" type="submit" class="btn btn-primary">Valider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

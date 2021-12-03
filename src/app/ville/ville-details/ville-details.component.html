@@ -1,0 +1,26 @@
+<form [formGroup]="cityForm" (submit)="submitForm()" class="container">
+    <h5 class="modal-title" id="exampleModalLabel" *ngIf="cityForm.controls['id'].value == undefined">Ajouter une ville</h5>
+    <h5 class="modal-title" id="exampleModalLabel" *ngIf="cityForm.controls['id'].value != undefined">Editer une ville</h5>
+
+    <input type="hidden" formControlName="id">
+
+    <div class="mb-3">
+        <label for="nom" class="form-label">Nom</label>
+        <input type="text" class="form-control" id="nom" name="nom" formControlName="nom" placeholder="Nom" minlength="2" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="cp" class="form-label">Code Postal</label>
+        <input type="text" formControlName="codePostal" class="form-control" id="cp" name="cp" placeholder="Code Postal" minlength="2" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="cp" class="form-label">Pays</label>
+        <input type="text" formControlName="pays" class="form-control" id="pays" name="pays" placeholder="Pays" minlength="2" required>
+    </div>
+
+    <div class="d-flex">
+        <button type="submit" class="btn btn-secondary">Valider</button>
+        <button type="reset" class="btn btn-danger float-end">Annuler</button>
+    </div>
+</form> 
